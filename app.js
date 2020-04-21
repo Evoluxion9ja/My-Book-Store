@@ -3,6 +3,7 @@ const body_parser = require('body-parser');
 const mongoose = require('mongoose');
 const MONGODB_URI = 'mongodb://localhost/Book-Store';
 const morgan = require('morgan');
+const multer = require('multer');
 const MongoUses = {
     useCreateIndex: true,
     useFindAndModify: false,
@@ -11,7 +12,25 @@ const MongoUses = {
 }
 const app = express();
 
+const imageStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now().toString() + '-' + file.originalname)
+    }
+})
+
+const imageFilter = (req, file, cb) => {
+    if(file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
+        cb(null, true)
+    }else{
+        cb(null, false)
+    }
+}
+
 app.use(body_parser.urlencoded({extended: false}));
+app.use(multer({storage: imageStorage}).single('image'))
 app.use(body_parser.json());
 
 app.use((req, res, next) => {

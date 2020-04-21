@@ -1,5 +1,6 @@
 const Book = require('../models/bookModel');
 
+
 exports.getAllBooks = (req, res, next) => {
     Book.find()
     .select('id name author ISBN price')
@@ -36,6 +37,7 @@ exports.getAllBooks = (req, res, next) => {
 }
 
 exports.createBook = (req, res, next) => {
+    console.log(req.file);
     const book = new Book({
         title: req.body.title,
         author: req.body.author,
