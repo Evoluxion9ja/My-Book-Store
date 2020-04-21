@@ -3,7 +3,7 @@ const Book = require('../models/bookModel');
 
 exports.getAllBooks = (req, res, next) => {
     Book.find()
-    .select('id name author ISBN price')
+    .select('id name author ISBN price image')
     .then(books => {
         const response = {
             count: books.length,
@@ -13,6 +13,7 @@ exports.getAllBooks = (req, res, next) => {
                     title: book.title,
                     author: book.author,
                     ISBN: book.ISBN,
+                    image: book.image,
                     price: book.price,
                     request:{
                         type: 'GET',
@@ -42,6 +43,7 @@ exports.createBook = (req, res, next) => {
         title: req.body.title,
         author: req.body.author,
         ISBN: req.body.ISBN,
+        image: req.file.path,
         price: req.body.price
     })
     book.save()
@@ -52,6 +54,7 @@ exports.createBook = (req, res, next) => {
                 title: result.title,
                 author: result.author,
                 ISBN: result.ISBN,
+                image: result.image,
                 price: result.price
             },
             request:{
@@ -72,6 +75,7 @@ exports.createBook = (req, res, next) => {
 exports.getSingleBook = (req, res, next) => {
     const book_id = req.params.bookId;
     Book.findById(book_id)
+    .select('_id title author price ISBN image')
     .then(book => {
         if(!book){
             res.status(404).json({
@@ -85,6 +89,7 @@ exports.getSingleBook = (req, res, next) => {
                 title: book.title,
                 author: book.author,
                 ISBN: book.ISBN,
+                image: book.image,
                 price: "$ " + book.price,
                 request:{
                     type: 'GET',

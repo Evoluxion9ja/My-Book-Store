@@ -14,6 +14,10 @@ const bookSchema = new Schema({
         type: Number,
         default: Math.random(20)
     },
+    image:{
+        type: String,
+        required: true
+    },
     price:{
         type: Number,
         required: true
