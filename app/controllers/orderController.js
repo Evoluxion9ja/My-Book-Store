@@ -4,6 +4,7 @@ const Order = require('../models/orderModel');
 exports.getOrders = (req, res, next) => { 
     Order.find()
     .select('_id book quantity')
+    .populate('book', 'title author price')
     .then(orders => {
         if(!orders){
             res.status(404).json({
@@ -70,6 +71,7 @@ exports.createOrder = (req, res, next) => {
 exports.getSIngleOrder = (req, res, next) => {
     const order_id = req.params.orderId;
     Order.findById(order_id)
+    .populate('book', 'title price author')
     .then(order => {
         if(!order){
             res.status(404).json({message: 'The requested order has been deleted from the inventory'})
